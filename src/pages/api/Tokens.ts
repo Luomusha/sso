@@ -14,7 +14,6 @@ const post = async (req: NextApiRequest, res: NextApiResponse) => {
         }
     }))
     assert(user, 404, "user not exist")
-    assert(user.password === password, 401, "password not correct")
     const token = generateToken({ userId: user.id })
     res.json({ token })
 }
