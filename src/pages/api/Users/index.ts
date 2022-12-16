@@ -1,8 +1,12 @@
 import assert from "http-assert";
 import { NextApiRequest, NextApiResponse } from "next";
-import { middleware } from "../../common/middleware";
-import { generateToken } from "../../common/util";
-import { User } from "../../schemas/User";
+import { middleware } from "../../../common/middleware";
+import { User } from "../../../schemas/User";
+
+const get = async (req: NextApiRequest, res: NextApiResponse) => {
+    const users = await User.findAll({})
+    res.json(users)
+}
 
 const post = async (req: NextApiRequest, res: NextApiResponse) => {
     const { username, password } = req.body
@@ -14,12 +18,15 @@ const post = async (req: NextApiRequest, res: NextApiResponse) => {
         }
     })
     assert(user, 404, "user not exist")
-    const token = generateToken({ userId: user.id })
-    res.json({ token })
 }
+
+
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
+        case "GET":
+            await get(req, res)
+            break;
         case "POST":
             await post(req, res)
             break;
